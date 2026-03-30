@@ -63,15 +63,35 @@ jobs:
       run: |
         mv build/bin/ot-cli-ftd build/bin/ot-cli-ftd-USB
         arm-none-eabi-objcopy -O ihex build/bin/ot-cli-ftd-USB build/bin/ot-cli-ftd-USB.hex
-    
-  # Step 8: Rename RCP ELF and HEX files
+
+    # Step 8: Rename RCP ELF and HEX files
     - name: Rename RCP binaries
       working-directory: ot-nrf528xx
       run: |
         mv build/bin/ot-rcp build/bin/ot-rcp-USB
         arm-none-eabi-objcopy -O ihex build/bin/ot-rcp-USB build/bin/ot-rcp-USB.hex
+
+    # Step 9: Build USB version
+    - name: Build nRF52840 USB Example
+      working-directory: ot-nrf528xx
+      run: ./script/build nrf52840 USB_trans -DOT_BOOTLOADER=BLE
+
+    # Step 10: Rename USB ELF and HEX files
+    - name: Rename USB binaries
+      working-directory: ot-nrf528xx
+      run: |
+        mv build/bin/ot-cli-ftd build/bin/ot-cli-ftd-USB_BLE
+        arm-none-eabi-objcopy -O ihex build/bin/ot-cli-ftd-USB_BLE build/bin/ot-cli-ftd-USB_BLE.hex
+
+    # Step 11: Rename RCP ELF and HEX files
+    - name: Rename RCP binaries
+      working-directory: ot-nrf528xx
+      run: |
+        mv build/bin/ot-rcp build/bin/ot-rcp-USB_BLE
+        arm-none-eabi-objcopy -O ihex build/bin/ot-rcp-USB_BLE build/bin/ot-rcp-USB_BLE.hex
+
         
-    # Step 9: Upload artifacts
+    # Step 12: Upload artifacts
     - name: Upload binaries
       uses: actions/upload-artifact@v4
       with:
@@ -81,7 +101,11 @@ jobs:
           ot-nrf528xx/build/bin/ot-cli-ftd-UART.hex
           ot-nrf528xx/build/bin/ot-cli-ftd-USB
           ot-nrf528xx/build/bin/ot-cli-ftd-USB.hex
+          ot-nrf528xx/build/bin/ot-cli-ftd-USB_BLE
+          ot-nrf528xx/build/bin/ot-cli-ftd-USB_BLE.hex
           ot-nrf528xx/build/bin/ot-rcp-USB
           ot-nrf528xx/build/bin/ot-rcp-USB.hex
+          ot-nrf528xx/build/bin/ot-rcp-USB_BLE
+          ot-nrf528xx/build/bin/ot-rcp-USB_BLE.hex
 
 
